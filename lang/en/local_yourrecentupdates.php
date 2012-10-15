@@ -15,4 +15,5 @@ $string['received'] = 'Received';
 $string['next'] = 'Next';
 $string['last'] = 'Last';
 $string['settings'] = 'Settings';
+$string['allupdates'] ='All updates';
 

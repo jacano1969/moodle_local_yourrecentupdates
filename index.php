@@ -19,7 +19,7 @@ require_once($CFG->dirroot.'/local/yourrecentupdates/lib.php');
 
 
 $course_id = optional_param('course', 0, PARAM_INT);  // show recent updates based on course
-$type = optional_param('filter', 0, PARAM_INT);         // show all updates|announcements|course content|discussions
+$update_type = optional_param('filter', 0, PARAM_INT);         // show all updates|announcements|course content|discussions
 
 
 $PAGE->set_url('/local/yourrecentupdates/');
@@ -54,7 +54,7 @@ $recent_updates .= get_user_notification_filters($course_id);
 
 
 
-$testing = get_recent_updates();
+$testing = get_recent_updates($update_type);
 
 $recent_updates .= html_writer::start_tag('h4');
 $recent_updates .= $testing;
