@@ -66,8 +66,6 @@ function get_user_notification_filters($course_selected)
     $course_select .= html_writer::end_tag('p');  
     $course_select .= html_writer::end_tag('div');
     
-    
-    
     $course_select .= html_writer::start_tag('div', array('class'=>'row'));
     $course_select .= html_writer::start_tag('h3',array('for'=>'course'));
     $course_select .= get_string('updatetype', 'local_yourrecentupdates');
@@ -78,24 +76,28 @@ function get_user_notification_filters($course_selected)
     $course_select .= html_writer::start_tag('li');
     $course_select .= html_writer::start_tag('a', array('href'=>'#'));
     $course_select .= get_string('all', 'local_yourrecentupdates');
+    $course_select .= html_writer::end_tag('a');
     $course_select .= html_writer::end_tag('li');
     
     $course_select .= html_writer::start_tag('li');
     $course_select .= html_writer::start_tag('a', array('href'=>'#'));
     $course_select .= html_writer::empty_tag('img', array('src'=>'pix/icon_announcements.png'));
     $course_select .= get_string('announcements', 'local_yourrecentupdates');
+    $course_select .= html_writer::end_tag('a');
     $course_select .= html_writer::end_tag('li');
     
     $course_select .= html_writer::start_tag('li');
     $course_select .= html_writer::start_tag('a', array('href'=>'#'));
     $course_select .= html_writer::empty_tag('img', array('src'=>'pix/icon_coursecontent.png'));
     $course_select .= get_string('coursecontent', 'local_yourrecentupdates');
+    $course_select .= html_writer::end_tag('a');
     $course_select .= html_writer::end_tag('li');    
     
     $course_select .= html_writer::start_tag('li');
     $course_select .= html_writer::start_tag('a', array('href'=>'#'));
     $course_select .= html_writer::empty_tag('img', array('src'=>'pix/icon_discussions.png'));
     $course_select .= get_string('discussions', 'local_yourrecentupdates');
+    $course_select .= html_writer::end_tag('a');
     $course_select .= html_writer::end_tag('li');
     
     $course_select .= html_writer::end_tag('ul');
