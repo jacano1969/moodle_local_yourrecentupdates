@@ -241,7 +241,7 @@ function get_recent_update_records($update_type) {
                     $log_entry_viewed = 'unread';
                     
                     // check if the user has viewed the update
-                    if($DB->get_record_select('log', "userid = ? AND module = ? AND action = 'view'", array($USER->id, $modname))) {
+                    if($DB->get_record_select('log', "userid = ? AND module = ? AND action = 'view' LIMIT 1", array($USER->id, $modname))) {
                         // mark this log entry as viewed
                         $log_entry_viewed = 'read';
                     }
