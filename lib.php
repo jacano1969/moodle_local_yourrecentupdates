@@ -253,15 +253,19 @@ function get_recent_update_records($update_type) {
                     // get user record for this update
                     $log_entry_user = $DB->get_record('user', array('id'=>$log->userid));
       
-                    // get course name              
-                    $log_entry_course = $DB->get_record('course',array('id'=>$cm->course));
-                    $log_entry_course_name = $log_entry_course->fullname;
+                    // get course name
                     
+                    $log_entry_course = $DB->get_record('course',array('id'=>$cm->course));
+                    $log_entry_course_name = html_writer::start_tag('a', array('href'=>$CFG->wwwroot.$log_entry_url));
+                    $log_entry_course_name .= $log_entry_course->fullname;
+                    $log_entry_course_name .= html_writer::end_tag('a');
+                                                                    
                     // prepare update text
                     $log_entry_update_text = html_writer::start_tag('a', array('href'=>$CFG->wwwroot.$log_entry_url));
                     $log_entry_update_text .= $log_entry_user->firstname . ' ' .$log_entry_user->lastname.': ';
                     $stradded = get_string('added', 'moodle', get_string('modulename', $modname));
                     $log_entry_update_text .= $stradded . ' ' . format_string($cm->name, true);
+                    $log_entry_update_text .= html_writer::end_tag('a');
                 
                     // get time of update
                     $log_entry_time_created = date('l jS F Y', $log->time);
