@@ -228,7 +228,7 @@ function get_recent_update_records($update_type) {
                 
                 if($log->action=='add mod') {
                 
-                    if(!$instanceid) {
+                    if(!$instanceid || !$modname) {
                         continue;
                     }
                 
