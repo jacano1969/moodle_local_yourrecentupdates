@@ -192,9 +192,14 @@ function get_recent_updates($update_type) {
  * Helper functions
  */
 
+ /**
+  * Description: function to retreive notifications given the notification type
+  *
+  * Author: Daniel J. Somers 15/10/2012
+  */
 function get_recent_update_records($update_type) {
 
-    global $CFG, $USER, $DB, $OUTPUT;
+    global $CFG, $USER, $DB;
 
     $recent_updates = array();
     
@@ -205,7 +210,9 @@ function get_recent_update_records($update_type) {
         $logs = $DB->get_records_select('log', "module = 'course' AND (action = 'add mod')", null, "id ASC");
     
         if($logs) {
+            
             foreach ($logs as $key => $log) {
+                
                 $info = explode(' ', $log->info);
                 
                 if ($info[0] == 'label') {     // Labels are ignored in recent activity
@@ -217,6 +224,7 @@ function get_recent_update_records($update_type) {
                     continue;
                 }
                 
+                // get course details for log entry
                 $context = get_context_instance(CONTEXT_COURSE, $log->course);
                 $course = $DB->get_record('course', array('id'=>$log->course));
                 
@@ -228,14 +236,16 @@ function get_recent_update_records($update_type) {
                 
                 if($log->action=='add mod') {
                 
+                    // check that this mod still exists (may have been removed)
                     if(!isset($modinfo->instances[$modname][$instanceid])) {
                         continue;
                     }
                     
+                    // get mod info
                     $cm = $modinfo->instances[$modname][$instanceid];
                     
                     // check if user has access
-                    if (!$cm || !$cm->uservisible) {
+                    if (!$cm->uservisible) {
                         continue;
                     }
                     
@@ -254,7 +264,6 @@ function get_recent_update_records($update_type) {
                     $log_entry_user = $DB->get_record('user', array('id'=>$log->userid));
       
                     // get course name
-                    
                     $log_entry_course = $DB->get_record('course',array('id'=>$cm->course));
                     $log_entry_course_name = html_writer::start_tag('a', array('href'=>$CFG->wwwroot.$log_entry_url));
                     $log_entry_course_name .= $log_entry_course->fullname;
@@ -407,98 +416,7 @@ function get_recent_update_records($update_type) {
     return $recent_updates;
 }
 
-/*
-<h2>All updates</h2>
-
-<table>
-  <tbody>
-    <tr class="unread">
-      <td class="resource"><img src="pix/icon_coursecontent.png" alt=""></td>
-      <td><a href="">John Doe: Resource tomorrow’s lecture notes have been uploaded.</a></td>                   
-      <td class="course"><a href="">Photography</a></td>                                     
-      <td class="time">Today 10:00 am</td>                                     
-      <td class="done"><input type="checkbox"></td>                                                       
-    </tr>
-    <tr class="unread">
-      <td class="announcement"><img src="pix/icon_announcements.png" alt=""></td>
-      <td><a href="">John Doe: Announcement tomorrow’s lecture notes have been uploaded.</a></td>                   
-      <td class="course"><a href="">Photography</a></td>                                     
-      <td class="time">Today 10:00 am</td>                                     
-      <td class="done"><input type="checkbox"></td>                                                       
-    </tr>
-    <tr class="unread">
-      <td class="comment"><img src="pix/icon_discussions.png" alt=""></td>
-      <td><a href="">John Doe: Discussion tomorrow’s lecture notes have been uploaded.</a></td>                   
-      <td class="course"><a href="">Photography</a></td>                                     
-      <td class="time">Today 10:00 am</td>                                     
-      <td class="done"><input type="checkbox"></td>                                                       
-    </tr>
-    <tr class="unread">
-      <td class="resource"><img src="pix/icon_announcements.png" alt=""></td>
-      <td><a href="">John Doe: Resource tomorrow’s lecture notes have been uploaded.</a></td>                   
-      <td class="course"><a href="">Photography</a></td>                                     
-      <td class="time">Today 10:00 am</td>                                     
-      <td class="done"><input type="checkbox"></td>                                                       
-    </tr>
-    <tr class="unread">
-      <td class="announcement"><img src="pix/icon_coursecontent.png" alt=""></td>
-      <td><a href="">John Doe: Announcement tomorrow’s lecture notes have been uploaded.</a></td>                   
-      <td class="course"><a href="">Photography</a></td>                                     
-      <td class="time">Today 10:00 am</td>                                     
-      <td class="done"><input type="checkbox"></td>                                                       
-    </tr>
-    <tr>
-      <td class="comment"><img src="pix/icon_discussions.png" alt=""></td>
-      <td><a href="">John Doe: Discussion tomorrow’s lecture notes have been uploaded.</a></td>                   
-      <td class="course"><a href="">Photography</a></td>                                     
-      <td class="time">Today 10:00 am</td>                                     
-      <td class="done"><input type="checkbox"></td>                                                       
-    </tr>
-    <tr>
-      <td class="resource"><img src="pix/icon_announcements.png" alt=""></td>
-      <td><a href="">John Doe: Resource tomorrow’s lecture notes have been uploaded.</a></td>                   
-      <td class="course"><a href="">Photography</a></td>                                     
-      <td class="time">Today 10:00 am</td>                                     
-      <td class="done"><input type="checkbox"></td>                                                       
-    </tr>
-    <tr>
-      <td class="announcement"><img src="pix/icon_coursecontent.png" alt=""></td>
-      <td><a href="">John Doe: Announcement tomorrow’s lecture notes have been uploaded.</a></td>                   
-      <td class="course"><a href="">Photography</a></td>                                     
-      <td class="time">Today 10:00 am</td>                                     
-      <td class="done"><input type="checkbox"></td>                                                       
-    </tr>
-    <tr>
-      <td class="comment"><img src="pix/icon_discussions.png" alt=""></td>
-      <td><a href="">John Doe: Discussion tomorrow’s lecture notes have been uploaded.</a></td>                   
-      <td class="course"><a href="">Photography</a></td>                                     
-      <td class="time">Today 10:00 am</td>                                     
-      <td class="done"><input type="checkbox"></td>                                                       
-    </tr>
-    <tr>
-      <td class="resource"><img src="pix/icon_announcements.png" alt=""></td>
-      <td><a href="">John Doe: Resource tomorrow’s lecture notes have been uploaded.</a></td>                   
-      <td class="course"><a href="">Photography</a></td>                                     
-      <td class="time">Today 10:00 am</td>                                     
-      <td class="done"><input type="checkbox"></td>                                                       
-    </tr>
-    <tr>
-      <td class="announcement"><img src="pix/icon_coursecontent.png" alt=""></td>
-      <td><a href="">John Doe: Announcement tomorrow’s lecture notes have been uploaded.</a></td>                   
-      <td class="course"><a href="">Photography</a></td>                                     
-      <td class="time">Today 10:00 am</td>                                     
-      <td class="done"><input type="checkbox"></td>                                                       
-    </tr>
-    <tr>
-      <td class="comment"><img src="pix/icon_discussions.png" alt=""></td>
-      <td><a href="">John Doe: Discussion tomorrow’s lecture notes have been uploaded.</a></td>                   
-      <td class="course"><a href="">Photography</a></td>                                     
-      <td class="time">Today 10:00 am</td>                                     
-      <td class="done"><input type="checkbox"></td>                                                       
-    </tr>                                                
-  </tbody>
-</table>
-
+/*  still to implement
 <div class="pagination">
   
   <p>Page 2 of 14</p>
