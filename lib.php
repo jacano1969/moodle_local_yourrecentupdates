@@ -228,6 +228,10 @@ function get_recent_update_records($update_type) {
                 
                 if($log->action=='add mod') {
                 
+                    if(!$info[0] || !$info[1]) {
+                        continue;
+                    }
+                    
                     $cm = $modinfo->instances[$modname][$instanceid];
                     
                     // check if user has access
