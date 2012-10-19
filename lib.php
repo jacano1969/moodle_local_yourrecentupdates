@@ -134,6 +134,9 @@ function get_recent_updates($course_id, $update_type) {
     // get all recent updates
     $updates = get_recent_update_records($course_id, $update_type);
     
+    // sort by datetime
+    uasort($updates, "sort_recent_updates_by_date");
+    
     foreach($updates as $update) {
                     
         // show whether this update is read/unread
@@ -285,6 +288,7 @@ function get_recent_update_records($course_id, $update_type) {
                 
                     // get time of update
                     $log_entry_time_created = date('l jS F Y', $log->time);
+                    $log_datetime_compare = $log->time;
                     
                     // store log entries
                     $recent_update = new stdClass();
@@ -294,6 +298,7 @@ function get_recent_update_records($course_id, $update_type) {
                     $recent_update->date_time = $log_entry_time_created;
                     $recent_update->status = $log_entry_viewed;
                     $recent_update->update_type = 2;
+                    $recent_update->order_by = $log_datetime_compare;
                     
                     // add this update to the recent updates array
                     $recent_updates[]=$recent_update;
@@ -346,6 +351,7 @@ function get_recent_update_records($course_id, $update_type) {
                 
                 // get time of update
                 $log_entry_time_created = date('l jS F Y', $log->time);
+                $log_datetime_compare = $log->time;
                 
                 // store log entries
                 $recent_update = new stdClass();
@@ -355,6 +361,7 @@ function get_recent_update_records($course_id, $update_type) {
                 $recent_update->date_time = $log_entry_time_created;
                 $recent_update->status = $log_entry_viewed;
                 $recent_update->update_type = 3;
+                $recent_update->order_by = $log_datetime_compare;
                 
                 // add this update to the recent updates array
                 $recent_updates[]=$recent_update;
@@ -364,6 +371,20 @@ function get_recent_update_records($course_id, $update_type) {
     
     return $recent_updates;
 }
+
+
+
+function sort_recent_updates_by_date($recent_update_1, $recent_update_2)
+{
+    if ( $recent_update_1->order_by > $recent_update_2->order_by ) return -1;
+    
+    if ( $recent_update_1->order_by < $recent_update_2->order_by ) return 1;
+    
+    return 0; 
+}
+
+
+
 
 /*  still to implement
 <div class="pagination">
