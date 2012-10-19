@@ -17,6 +17,7 @@
 require_once(dirname(__FILE__) . '/../../config.php');
 require_once($CFG->dirroot.'/local/yourrecentupdates/lib.php');
 
+require_login(0, false);
 
 $course_id = optional_param('course', 0, PARAM_INT);  // show recent updates based on course
 $update_type = optional_param('filter', 0, PARAM_INT);         // show all updates|announcements|course content|discussions
