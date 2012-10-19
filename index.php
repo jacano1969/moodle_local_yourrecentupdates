@@ -29,7 +29,6 @@ $PAGE->set_title(get_string('pluginname', 'local_yourrecentupdates'));
 
 $PAGE->navbar->add(get_string('pluginname', 'local_yourrecentupdates'));
 
-
 $recent_updates='';
 
 $recent_updates .= $OUTPUT->header();
@@ -54,7 +53,7 @@ $recent_updates .= get_user_notification_filters($course_id);
 
 
 
-$testing = get_recent_updates($update_type);
+$testing = get_recent_updates($course_id, $update_type);
 
 $recent_updates .= html_writer::start_tag('h4');
 $recent_updates .= $testing;

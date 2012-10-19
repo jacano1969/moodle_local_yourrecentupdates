@@ -62,7 +62,9 @@ function get_user_notification_filters($course_selected)
     $course_select .= html_writer::end_tag('select');
    
     $course_select .= html_writer::empty_tag('input',array('type'=>'submit','value'=>get_string('filter', 'local_yourrecentupdates')));
-   
+    
+    $course_select .= html_writer::empty_tag('input',array('type'=>'hidden','name'=>'filter'));
+    
     $course_select .= html_writer::end_tag('p');  
     $course_select .= html_writer::end_tag('div');
     
@@ -74,27 +76,27 @@ function get_user_notification_filters($course_selected)
     $course_select .= html_writer::start_tag('ul');
     
     $course_select .= html_writer::start_tag('li');
-    $course_select .= html_writer::start_tag('a', array('href'=>'#'));
+    $course_select .= html_writer::start_tag('a', array('href'=>'#','onClick'=>'document.frmfilter.filter.value=0;document.frmfilter.submit();'));
     $course_select .= get_string('all', 'local_yourrecentupdates');
     $course_select .= html_writer::end_tag('a');
     $course_select .= html_writer::end_tag('li');
     
     $course_select .= html_writer::start_tag('li');
-    $course_select .= html_writer::start_tag('a', array('href'=>'#'));
+    $course_select .= html_writer::start_tag('a', array('href'=>'#','onClick'=>'document.frmfilter.filter.value=1;document.frmfilter.submit();'));
     $course_select .= html_writer::empty_tag('img', array('src'=>'pix/icon_announcements.png'));
     $course_select .= get_string('announcements', 'local_yourrecentupdates');
     $course_select .= html_writer::end_tag('a');
     $course_select .= html_writer::end_tag('li');
     
     $course_select .= html_writer::start_tag('li');
-    $course_select .= html_writer::start_tag('a', array('href'=>'#'));
+    $course_select .= html_writer::start_tag('a', array('href'=>'#','onClick'=>'document.frmfilter.filter.value=2;document.frmfilter.submit();'));
     $course_select .= html_writer::empty_tag('img', array('src'=>'pix/icon_coursecontent.png'));
     $course_select .= get_string('coursecontent', 'local_yourrecentupdates');
     $course_select .= html_writer::end_tag('a');
     $course_select .= html_writer::end_tag('li');    
     
     $course_select .= html_writer::start_tag('li');
-    $course_select .= html_writer::start_tag('a', array('href'=>'#'));
+    $course_select .= html_writer::start_tag('a', array('href'=>'#','onClick'=>'document.frmfilter.filter.value=3;document.frmfilter.submit();'));
     $course_select .= html_writer::empty_tag('img', array('src'=>'pix/icon_discussions.png'));
     $course_select .= get_string('discussions', 'local_yourrecentupdates');
     $course_select .= html_writer::end_tag('a');
@@ -119,7 +121,7 @@ function get_user_notification_filters($course_selected)
  *
  * Author: Daniel J. Somers 15/10/2910
  */
-function get_recent_updates($update_type) {
+function get_recent_updates($course_id, $update_type) {
   
     $recent_updates = html_writer::start_tag('h3');
     $recent_updates .= get_string('allupdates', 'local_yourrecentupdates');
@@ -130,7 +132,7 @@ function get_recent_updates($update_type) {
     
     
     // get all recent updates
-    $updates = get_recent_update_records($update_type);
+    $updates = get_recent_update_records($course_id, $update_type);
     
     foreach($updates as $update) {
                     
@@ -197,7 +199,7 @@ function get_recent_updates($update_type) {
   *
   * Author: Daniel J. Somers 15/10/2012
   */
-function get_recent_update_records($update_type) {
+function get_recent_update_records($course_id, $update_type) {
 
     global $CFG, $USER, $DB;
 
@@ -207,8 +209,13 @@ function get_recent_update_records($update_type) {
     if($update_type==0 || $update_type==1 || $update_type==2) {
     
         // get added course modules
-        $logs = $DB->get_records_select('log', "module = 'course' AND (action = 'add mod')", null, "id DESC");
-    
+        if($course_id!=0)
+        {
+            $logs = $DB->get_records_select('log', "module = 'course' AND (course = ?) AND (action = 'add mod')", array($course_id), "id DESC");
+        }else {
+            $logs = $DB->get_records_select('log', "module = 'course' AND (action = 'add mod')", null, "id DESC");
+        }
+        
         if($logs) {
             
             foreach ($logs as $key => $log) {
@@ -298,92 +305,59 @@ function get_recent_update_records($update_type) {
     if($update_type==0 || $update_type==3) {
         
         // get added forum discussions
-        $logs = $DB->get_records_select('log', "module = 'forum' AND (action = 'add discussion' || action = 'add post')", null, "id DESC");
+        if($course_id!=0)
+        {
+            $logs = $DB->get_records_select('log', "module = 'forum' AND (course = ?) AND (action = 'add discussion' || action = 'add post')", array($course_id), "id DESC");
+        } else {
+            $logs = $DB->get_records_select('log', "module = 'forum' AND (action = 'add discussion' || action = 'add post')", null, "id DESC");
+        }
         
         if($logs) {
-            
            
             foreach ($logs as $key => $log) {
-                
-                //$info = explode(' ', $log->info);
-                
-                //if ($info[0] == 'label') {     // Labels are ignored in recent activity
-                //    continue;
-                //}
-                
-                //if (count($info) != 2) {
-                    //debugging("Incorrect log entry info: id = ".$log->id, DEBUG_DEVELOPER);
-                    //continue;
-                //}
-                
-                // get course details for log entry
-                //$context = get_context_instance(CONTEXT_COURSE, $log->course);
-                //$course = $DB->get_record('course', array('id'=>$log->course));
-                
-                // Next, have there been any modifications to the course structure?
-                //$modinfo = get_fast_modinfo($course);
-                
-                //$modname    = $info[0];
-                //$instanceid = $info[1];
-                //echo $modname;
-                //if($log->action=='add mod') {
-                
-                    // check that this mod still exists (may have been removed)
-                    //if(!isset($modinfo->instances[$modname][$instanceid])) {
-                    //    continue;
-                   // }
                     
-                    // get mod info
-                    //$cm = $modinfo->instances[$modname][$instanceid];
-
-                    // check if user has access
-                    //if (!$cm->uservisible) {
-                    //    continue;
-                    //}
-                    
-                    // url action to view log entry
-                    $log_entry_url = str_replace('..','',$log->url);
-                    $log_entry_name = str_replace('add','',$log->action);
-                    
-                    $log_entry_viewed = 'unread';
-                    
-                    // check if the user has viewed the update
-                    if($DB->get_record_select('log', "userid = ? AND module = 'forum' AND (action = 'view forum' || action = 'view discussion') LIMIT 1", array($USER->id))) {
-                        // mark this log entry as viewed
-                        $log_entry_viewed = 'read';
-                    }
-                    
-                    // get user record for this update
-                    $log_entry_user = $DB->get_record('user', array('id'=>$log->userid));
-      
-                    // get course name
-                    $log_entry_course = $DB->get_record('course',array('id'=>$log->course));
-                    $log_entry_course_name = html_writer::start_tag('a', array('href'=>$CFG->wwwroot.'/mod/forum/'.$log_entry_url));
-                    $log_entry_course_name .= $log_entry_course->fullname;
-                    $log_entry_course_name .= html_writer::end_tag('a');
-                                                                    
-                    // prepare update text
-                    $log_entry_update_text = html_writer::start_tag('a', array('href'=>$CFG->wwwroot.'/mod/forum/'.$log_entry_url));
-                    $log_entry_update_text .= $log_entry_user->firstname . ' ' .$log_entry_user->lastname.': ';
-                    $stradded = get_string('added', 'moodle', get_string('modulename', 'forum'));
-                    $log_entry_update_text .= $stradded . ' ' . $log_entry_name;
-                    $log_entry_update_text .= html_writer::end_tag('a');
+                // url action to view log entry
+                $log_entry_url = str_replace('..','',$log->url);
+                $log_entry_name = str_replace('add','',$log->action);
                 
-                    // get time of update
-                    $log_entry_time_created = date('l jS F Y', $log->time);
-                    
-                    // store log entries
-                    $recent_update = new stdClass();
-                    $recent_update->id = $log->id;
-                    $recent_update->course = $log_entry_course_name;
-                    $recent_update->update_text = $log_entry_update_text;
-                    $recent_update->date_time = $log_entry_time_created;
-                    $recent_update->status = $log_entry_viewed;
-                    $recent_update->update_type = 3;
-                    
-                    // add this update to the recent updates array
-                    $recent_updates[]=$recent_update;
-                //}
+                $log_entry_viewed = 'unread';
+                
+                // check if the user has viewed the update
+                if($DB->get_record_select('log', "userid = ? AND module = 'forum' AND (action = 'view forum' || action = 'view discussion') LIMIT 1", array($USER->id))) {
+                    // mark this log entry as viewed
+                    $log_entry_viewed = 'read';
+                }
+                
+                // get user record for this update
+                $log_entry_user = $DB->get_record('user', array('id'=>$log->userid));
+  
+                // get course name
+                $log_entry_course = $DB->get_record('course',array('id'=>$log->course));
+                $log_entry_course_name = html_writer::start_tag('a', array('href'=>$CFG->wwwroot.'/mod/forum/'.$log_entry_url));
+                $log_entry_course_name .= $log_entry_course->fullname;
+                $log_entry_course_name .= html_writer::end_tag('a');
+                                                                
+                // prepare update text
+                $log_entry_update_text = html_writer::start_tag('a', array('href'=>$CFG->wwwroot.'/mod/forum/'.$log_entry_url));
+                $log_entry_update_text .= $log_entry_user->firstname . ' ' .$log_entry_user->lastname.': ';
+                $stradded = get_string('added', 'moodle', get_string('modulename', 'forum'));
+                $log_entry_update_text .= $stradded . ' ' . $log_entry_name;
+                $log_entry_update_text .= html_writer::end_tag('a');
+                
+                // get time of update
+                $log_entry_time_created = date('l jS F Y', $log->time);
+                
+                // store log entries
+                $recent_update = new stdClass();
+                $recent_update->id = $log->id;
+                $recent_update->course = $log_entry_course_name;
+                $recent_update->update_text = $log_entry_update_text;
+                $recent_update->date_time = $log_entry_time_created;
+                $recent_update->status = $log_entry_viewed;
+                $recent_update->update_type = 3;
+                
+                // add this update to the recent updates array
+                $recent_updates[]=$recent_update;
             }
         }    
     }
