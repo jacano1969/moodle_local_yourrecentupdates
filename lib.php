@@ -160,16 +160,16 @@ function get_recent_updates($update_type) {
         
         // update text
         $recent_updates .= html_writer::start_tag('td');
-        $recent_updates .= html_writer::start_tag('a', array('href'=>'#'));
+        #$recent_updates .= html_writer::start_tag('a', array('href'=>'#'));
         $recent_updates .= $update->update_text;
-        $recent_updates .= html_writer::end_tag('a');
+        #$recent_updates .= html_writer::end_tag('a');
         $recent_updates .= html_writer::end_tag('td');
     
         // for course
         $recent_updates .= html_writer::start_tag('td', array('class'=>'course'));
-        $recent_updates .= html_writer::start_tag('a', array('href'=>'#'));
+        #$recent_updates .= html_writer::start_tag('a', array('href'=>'#'));
         $recent_updates .= $update->course;
-        $recent_updates .= html_writer::end_tag('a');
+        #$recent_updates .= html_writer::end_tag('a');
         $recent_updates .= html_writer::end_tag('td');
         
         // time/date
@@ -295,123 +295,98 @@ function get_recent_update_records($update_type) {
         }    
     }
     
-    //
-    // work in progress !!!!
-    //
-    
-    // only get recent posts if the limit has not been reached
-    /*if($num_notifications<$limit) {
+    if($update_type==0 || $update_type==3) {
         
-        // calculate new limit
-        $newlimit = $limit-$num_notifications;
+        // get added forum discussions
+        $logs = $DB->get_records_select('log', "module = 'forum' AND (action = 'add discussion' || action = 'add post')", null, "id DESC");
         
-        // get forum posts
-        $posts = $DB->get_records_sql("SELECT p.*, f.type AS forumtype, d.forum, d.groupid,
-                                                  d.timestart, d.timeend, d.userid AS duserid,
-                                                  u.firstname, u.lastname, u.email, u.picture
-                                             FROM {forum_posts} p
-                                                  JOIN {forum_discussions} d ON d.id = p.discussion
-                                                  JOIN {forum} f             ON f.id = d.forum
-                                                  JOIN {user} u              ON u.id = p.userid
-                                            WHERE p.created > ? AND f.course = ?
-                                         ORDER BY p.id ASC LIMIT $newlimit", array($timestart, $course->id)); // order by initial posting date
-        
-        if($posts) {
+        if($logs) {
             
-            foreach ($posts as $post) {
-                if (!isset($modinfo->instances['forum'][$post->forum])) {
-                    // not visible
-                    continue;
-                }
-                $cm = $modinfo->instances['forum'][$post->forum];
-                if (!$cm->uservisible) {
-                    continue;
-                }
-                $context = get_context_instance(CONTEXT_MODULE, $cm->id);
-        
-                if (!has_capability('mod/forum:viewdiscussion', $context)) {
-                    continue;
-                }
-        
-                if (!empty($CFG->forum_enabletimedposts) and $USER->id != $post->duserid
-                  and (($post->timestart > 0 and $post->timestart > time()) or ($post->timeend > 0 and $post->timeend < time()))) {
-                    if (!has_capability('mod/forum:viewhiddentimedposts', $context)) {
-                        continue;
-                    }
-                }
-        
-                $groupmode = groups_get_activity_groupmode($cm, $course);
-        
-                if ($groupmode) {
-                    if ($post->groupid == -1 or $groupmode == VISIBLEGROUPS or has_capability('moodle/site:accessallgroups', $context)) {
-                        // oki (Open discussions have groupid -1)
-                    } else {
-                        // separate mode
-                        if (isguestuser()) {
-                            // shortcut
-                            continue;
-                        }
-        
-                        if (is_null($modinfo->groups)) {
-                            $modinfo->groups = groups_get_user_groups($course->id); // load all my groups and cache it in modinfo
-                        }
-        
-                        if (!array_key_exists($post->groupid, $modinfo->groups[0])) {
-                            continue;
-                        }
-                    }
-                }
-        
-                // get user profile pic
-                $log_entry_user = $DB->get_record('user', array('id'=>$post->userid));
-                $log_entry_user_profile_pic = $OUTPUT->user_picture($log_entry_user, array('size'=>60));
+           
+            foreach ($logs as $key => $log) {
                 
-                // get course name              
-                $log_entry_course = $DB->get_record('course',array('id'=>$course->id));
-                $log_entry_course_name = $log_entry_course->fullname;
+                //$info = explode(' ', $log->info);
+                
+                //if ($info[0] == 'label') {     // Labels are ignored in recent activity
+                //    continue;
+                //}
+                
+                //if (count($info) != 2) {
+                    //debugging("Incorrect log entry info: id = ".$log->id, DEBUG_DEVELOPER);
+                    //continue;
+                //}
+                
+                // get course details for log entry
+                //$context = get_context_instance(CONTEXT_COURSE, $log->course);
+                //$course = $DB->get_record('course', array('id'=>$log->course));
+                
+                // Next, have there been any modifications to the course structure?
+                //$modinfo = get_fast_modinfo($course);
+                
+                //$modname    = $info[0];
+                //$instanceid = $info[1];
+                //echo $modname;
+                //if($log->action=='add mod') {
+                
+                    // check that this mod still exists (may have been removed)
+                    //if(!isset($modinfo->instances[$modname][$instanceid])) {
+                    //    continue;
+                   // }
                     
-                $notifications .= html_writer::start_tag('li');
-                $notifications .= $log_entry_user_profile_pic;
-                $notifications .= html_writer::start_tag('h5');
-                $notifications .= html_writer::start_tag('a', array('href'=>'#'));
-                $notifications .= $log_entry_course_name;
-                $notifications .= html_writer::end_tag('a');
-                $notifications .= html_writer::end_tag('h5');
-                $notifications .= html_writer::start_tag('p');
+                    // get mod info
+                    //$cm = $modinfo->instances[$modname][$instanceid];
+
+                    // check if user has access
+                    //if (!$cm->uservisible) {
+                    //    continue;
+                    //}
+                    
+                    // url action to view log entry
+                    $log_entry_url = str_replace('..','',$log->url);
+                    $log_entry_name = str_replace('add','',$log->action);
+                    
+                    $log_entry_viewed = 'unread';
+                    
+                    // check if the user has viewed the update
+                    if($DB->get_record_select('log', "userid = ? AND module = 'forum' AND (action = 'view forum' || action = 'view discussion') LIMIT 1", array($USER->id))) {
+                        // mark this log entry as viewed
+                        $log_entry_viewed = 'read';
+                    }
+                    
+                    // get user record for this update
+                    $log_entry_user = $DB->get_record('user', array('id'=>$log->userid));
+      
+                    // get course name
+                    $log_entry_course = $DB->get_record('course',array('id'=>$log->course));
+                    $log_entry_course_name = html_writer::start_tag('a', array('href'=>$CFG->wwwroot.'/mod/forum/'.$log_entry_url));
+                    $log_entry_course_name .= $log_entry_course->fullname;
+                    $log_entry_course_name .= html_writer::end_tag('a');
+                                                                    
+                    // prepare update text
+                    $log_entry_update_text = html_writer::start_tag('a', array('href'=>$CFG->wwwroot.'/mod/forum/'.$log_entry_url));
+                    $log_entry_update_text .= $log_entry_user->firstname . ' ' .$log_entry_user->lastname.': ';
+                    $stradded = get_string('added', 'moodle', get_string('modulename', 'forum'));
+                    $log_entry_update_text .= $stradded . ' ' . $log_entry_name;
+                    $log_entry_update_text .= html_writer::end_tag('a');
                 
-                if (empty($post->parent)) {
-                    $notifications .= html_writer::start_tag('a', array('href'=>$CFG->wwwroot.'/mod/forum/discuss.php?d='.$post->discussion));
-                } else {
-                    $notifications .= html_writer::start_tag('a', array('href'=>$CFG->wwwroot.'/mod/forum/discuss.php?d='.$post->discussion.'&amp;parent='
-                                                            .$post->parent.'#p'.$post->id));
-                }
-                
-                $notifications .= html_writer::start_tag('a', array('href'=>$CFG->wwwroot.'/mod/'.$cm->modname.'/view.php?id='.$cm->id));
-                $notifications .= $log_entry_user->firstname . ' ' .$log_entry_user->lastname.': ';
-                $notifications .= get_string('newforumposts', 'forum'). ' ';
-                $notifications .= break_up_long_words(format_string($post->subject, true)).' ';
-                $notifications .= format_string($cm->name, true);
-                $notifications .= html_writer::end_tag('a');
-                $notifications .= html_writer::end_tag('p');
-                $notifications .= html_writer::start_tag('p', array('class'=>'time'));
-                $notifications .= date('l jS F Y', $post->modified);
-                $notifications .= html_writer::end_tag('p');
-                $notifications .= html_writer::end_tag('li');
-                
-                $num_notifications++;
+                    // get time of update
+                    $log_entry_time_created = date('l jS F Y', $log->time);
+                    
+                    // store log entries
+                    $recent_update = new stdClass();
+                    $recent_update->id = $log->id;
+                    $recent_update->course = $log_entry_course_name;
+                    $recent_update->update_text = $log_entry_update_text;
+                    $recent_update->date_time = $log_entry_time_created;
+                    $recent_update->status = $log_entry_viewed;
+                    $recent_update->update_type = 3;
+                    
+                    // add this update to the recent updates array
+                    $recent_updates[]=$recent_update;
+                //}
             }
-        }
+        }    
     }
-    
-    $all_notifications = get_string('recentupdates','theme_ual', $num_notifications);
-    $all_notifications .= html_writer::end_tag('a');
-    $all_notifications .= html_writer::end_tag('h4');
-    $all_notifications .= html_writer::start_tag('div');
-    $all_notifications .= html_writer::start_tag('ol');
-    
-    $all_notifications .= $notifications;
-    
-    $all_notifications .= html_writer::end_tag('ol');    */
     
     return $recent_updates;
 }
