@@ -207,7 +207,7 @@ function get_recent_update_records($update_type) {
     if($update_type==0 || $update_type==1 || $update_type==2) {
     
         // get added course modules
-        $logs = $DB->get_records_select('log', "module = 'course' AND (action = 'add mod')", null, "id ASC");
+        $logs = $DB->get_records_select('log', "module = 'course' AND (action = 'add mod')", null, "id DESC");
     
         if($logs) {
             
