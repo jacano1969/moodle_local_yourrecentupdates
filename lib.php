@@ -206,7 +206,13 @@ function get_recent_update_records($course_id, $update_type) {
 
     global $CFG, $USER, $DB;
 
+    // get configuration settings
+    $notifcations_per_page = $CFG->notifications_per_page;
+    $max_number_of_notifications = $CFG->max_number_of_notifications;
+    $notifications_time_period = $CFG->notifications_time_period;        
+    
     $recent_updates = array();
+    $current_update_type='';
     
     // update type required is all, announcement, or course content
     if($update_type==0 || $update_type==1 || $update_type==2) {
@@ -232,6 +238,33 @@ function get_recent_update_records($course_id, $update_type) {
                 if (count($info) != 2) {
                     debugging("Incorrect log entry info: id = ".$log->id, DEBUG_DEVELOPER);
                     continue;
+                }
+                
+                // show all ?
+                if($update_type==0 && stripos($log->url,'forum')===false) {
+                    $current_update_type=2;
+                } else {
+                    $current_update_type=1;
+                }
+                
+                // exclude announcements ?
+                if($update_type==2) {
+                    if(stripos($log->url,'forum')===false) {
+                        // this update type is course content
+                        $current_update_type=2;
+                    } else {
+                        continue;
+                    }
+                }
+                
+                // exclude course content ?
+                if($update_type==1) {
+                    if(stripos($log->url,'forum')!==false) {
+                        // this update type is an announcement
+                        $current_update_type=1;
+                    } else {
+                        continue;
+                    }                   
                 }
                 
                 // get course details for log entry
@@ -297,7 +330,10 @@ function get_recent_update_records($course_id, $update_type) {
                     $recent_update->update_text = $log_entry_update_text;
                     $recent_update->date_time = $log_entry_time_created;
                     $recent_update->status = $log_entry_viewed;
-                    $recent_update->update_type = 2;
+                    
+                    // check what the this update type is
+                    $recent_update->update_type = $current_update_type;
+
                     $recent_update->order_by = $log_datetime_compare;
                     
                     // add this update to the recent updates array
@@ -369,11 +405,22 @@ function get_recent_update_records($course_id, $update_type) {
         }    
     }
     
+    // is maximum number of notifications limited ?
+    if($max_number_of_notifications>0)
+    {
+        $recent_updates = array_slice($recent_updates, 0, $max_number_of_notifications);
+    }
+    
     return $recent_updates;
 }
 
 
-
+/**
+ * Description: function to sort an array based on the value of
+ *              the index order_by (unix timestamp/numeric)
+ *
+ * Author: Daniel J. Somers 22-10-2012
+ */
 function sort_recent_updates_by_date($recent_update_1, $recent_update_2)
 {
     if ( $recent_update_1->order_by > $recent_update_2->order_by ) return -1;
