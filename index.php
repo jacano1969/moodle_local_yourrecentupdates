@@ -35,20 +35,22 @@ $recent_updates='';
 $recent_updates .= $OUTPUT->header();
 $recent_updates .= $OUTPUT->heading(get_string('pluginname', 'local_yourrecentupdates'));
 
-$recent_updates .= html_writer::start_tag('div', array('class'=>'in-page-controls'));
-$recent_updates .= html_writer::start_tag('p', array('class='=>'settings'));
-$recent_updates .= html_writer::start_tag('a', array('href'=>'#'));
-$recent_updates .= get_string('settings', 'local_yourrecentupdates');
-$recent_updates .= html_writer::start_tag('span');
-$recent_updates .= html_writer::start_tag('i');
-$recent_updates .= html_writer::end_tag('i');
-$recent_updates .= html_writer::end_tag('i');
-$recent_updates .= html_writer::end_tag('a');
-$recent_updates .= html_writer::end_tag('p');
-$recent_updates .= html_writer::end_tag('div');
-            
-// TESTING !!!
-//$recent_updates .= var_dump($_POST);
+$hassiteconfig = has_capability('moodle/site:config', $context);
+
+if($hassiteconfig) {
+    $recent_updates .= html_writer::start_tag('div', array('class'=>'in-page-controls'));
+    $recent_updates .= html_writer::start_tag('p', array('class='=>'settings'));
+    $recent_updates .= html_writer::start_tag('a', array('href'=>$CFG->wwwroot.'/admin/settings.php?section=local_yourrecentupdates'));
+    $recent_updates .= get_string('settings', 'local_yourrecentupdates');
+    $recent_updates .= html_writer::start_tag('span');
+    $recent_updates .= html_writer::start_tag('i');
+    $recent_updates .= html_writer::end_tag('i');
+    $recent_updates .= html_writer::end_tag('i');
+    $recent_updates .= html_writer::end_tag('a');
+    $recent_updates .= html_writer::end_tag('p');
+    $recent_updates .= html_writer::end_tag('div');
+}
+
 
 $recent_updates .= get_user_notification_filters($course_id);
 
