@@ -63,7 +63,8 @@ function get_user_notification_filters($course_selected)
    
     $course_select .= html_writer::empty_tag('input',array('type'=>'submit','value'=>get_string('filter', 'local_yourrecentupdates')));
     
-    $course_select .= html_writer::empty_tag('input',array('type'=>'hidden','name'=>'filter'));
+    $course_select .= html_writer::empty_tag('input', array('type'=>'hidden','name'=>'page'));
+    $course_select .= html_writer::empty_tag('input', array('type'=>'hidden','name'=>'filter'));
     
     $course_select .= html_writer::end_tag('p');  
     $course_select .= html_writer::end_tag('div');
@@ -121,72 +122,135 @@ function get_user_notification_filters($course_selected)
  *
  * Author: Daniel J. Somers 15/10/2910
  */
-function get_recent_updates($course_id, $update_type) {
+function get_recent_updates($course_id, $update_type, $page_num, $limit) {
   
     $recent_updates = html_writer::start_tag('h3');
     $recent_updates .= get_string('allupdates', 'local_yourrecentupdates');
     $recent_updates .= html_writer::end_tag('h3');
     
-    $recent_updates .= html_writer::start_tag('table');
-    $recent_updates .= html_writer::start_tag('tbody');
-    
-    
     // get all recent updates
-    $updates = get_recent_update_records($course_id, $update_type);
+    $updates = get_recent_update_records($course_id, $update_type, $page_num, $limit);
+    
+    $total_updates = count($updates);
+    $total_pages = ceil($total_updates / $limit);
     
     // sort by datetime
     uasort($updates, "sort_recent_updates_by_date");
+     
+    if($total_pages>1)
+    {
+        if($page_num==0) {
+            $page_num=1;
+        }
+        
+        $recent_updates .= html_writer::start_tag('div', array('class'=>'paging'));
+        $recent_updates .= 'Page:&nbsp;&nbsp;';
+        
+        for($index=1; $index<=$total_pages; $index++)
+        {
+            if($index==$page_num) {
+                $recent_updates .= '&nbsp;' . $index . '&nbsp;';
+            } else { 
+                $recent_updates .= html_writer::start_tag('a', array('href'=>'#','onClick'=>'document.frmfilter.page.value='.$index.';document.frmfilter.submit();'));
+                $recent_updates .= '&nbsp;' . $index . '&nbsp;';
+                $recent_updates .= html_writer::end_tag('a');
+            }
+        }
+        $recent_updates .= html_writer::end_tag('div');
+    }
     
+    $recent_updates .= html_writer::start_tag('table');
+    $recent_updates .= html_writer::start_tag('tbody');
+    
+    $update_count = 1;
+    
+    if($page_num<=1) {
+        $current_update = 1;
+    }else {
+        $current_update = ($page_num-1) * $limit+1;
+    }
+    
+    // show notifications
     foreach($updates as $update) {
-                    
-        // show whether this update is read/unread
-        $recent_updates .= html_writer::start_tag('tr', array('class'=>$update->status));
         
-        // if course update
-        if($update->update_type==2) {
-            $recent_updates .= html_writer::start_tag('td', array('class'=>'resource'));
-            $recent_updates .= html_writer::empty_tag('img', array('src'=>'pix/icon_coursecontent.png','alt'=>''));
+        /*if($total_updates<=$limit) {
+        
+        }*/
+        
+        if($update_count >= $current_update && $update_count < $current_update+$limit)
+        {
+            // show whether this update is read/unread
+            $recent_updates .= html_writer::start_tag('tr', array('class'=>$update->status));
+            
+            // if course update
+            if($update->update_type==2) {
+                $recent_updates .= html_writer::start_tag('td', array('class'=>'resource'));
+                $recent_updates .= html_writer::empty_tag('img', array('src'=>'pix/icon_coursecontent.png','alt'=>''));
+                $recent_updates .= html_writer::end_tag('td');
+            }
+            
+            // if announcement
+            if($update->update_type==1) {
+                $recent_updates .= html_writer::start_tag('td', array('class'=>'announcement'));
+                $recent_updates .= html_writer::empty_tag('img', array('src'=>'pix/icon_announcements.png','alt'=>''));
+                $recent_updates .= html_writer::end_tag('td');
+            }
+            
+            // if discussion
+            if($update->update_type==3) {
+                $recent_updates .= html_writer::start_tag('td', array('class'=>'comment'));
+                $recent_updates .= html_writer::empty_tag('img', array('src'=>'pix/icon_discussions.png','alt'=>''));
+                $recent_updates .= html_writer::end_tag('td');
+            }
+            
+            // update text
+            $recent_updates .= html_writer::start_tag('td');
+            $recent_updates .= $update->update_text;
             $recent_updates .= html_writer::end_tag('td');
-        }
         
-        // if announcement
-        if($update->update_type==1) {
-            $recent_updates .= html_writer::start_tag('td', array('class'=>'announcement'));
-            $recent_updates .= html_writer::empty_tag('img', array('src'=>'pix/icon_announcements.png','alt'=>''));
+            // for course
+            $recent_updates .= html_writer::start_tag('td', array('class'=>'course'));
+            $recent_updates .= $update->course;
             $recent_updates .= html_writer::end_tag('td');
-        }
-        
-        // if discussion
-        if($update->update_type==3) {
-            $recent_updates .= html_writer::start_tag('td', array('class'=>'comment'));
-            $recent_updates .= html_writer::empty_tag('img', array('src'=>'pix/icon_discussions.png','alt'=>''));
-            $recent_updates .= html_writer::end_tag('td');
-        }
-        
-        // update text
-        $recent_updates .= html_writer::start_tag('td');
-        #$recent_updates .= html_writer::start_tag('a', array('href'=>'#'));
-        $recent_updates .= $update->update_text;
-        #$recent_updates .= html_writer::end_tag('a');
-        $recent_updates .= html_writer::end_tag('td');
+            
+            // time/date
+            $recent_updates .= html_writer::start_tag('td', array('class'=>'time'));
+            $recent_updates .= $update->date_time;
+            $recent_updates .= html_writer::end_tag('td');        
     
-        // for course
-        $recent_updates .= html_writer::start_tag('td', array('class'=>'course'));
-        #$recent_updates .= html_writer::start_tag('a', array('href'=>'#'));
-        $recent_updates .= $update->course;
-        #$recent_updates .= html_writer::end_tag('a');
-        $recent_updates .= html_writer::end_tag('td');
-        
-        // time/date
-        $recent_updates .= html_writer::start_tag('td', array('class'=>'time'));
-        $recent_updates .= $update->date_time;
-        $recent_updates .= html_writer::end_tag('td');        
-
-        $recent_updates .= html_writer::end_tag('tr');
+            $recent_updates .= html_writer::end_tag('tr');
+            
+            $update_count++;
+        }
+        else {
+            $update_count++;
+        }
     }            
     
     $recent_updates .= html_writer::end_tag('tbody');
     $recent_updates .= html_writer::end_tag('table');
+    
+    if($total_pages>1)
+    {
+        if($page_num==0) {
+            $page_num=1;
+        }
+        
+        $recent_updates .= html_writer::start_tag('div', array('class'=>'paging'));
+        $recent_updates .= 'Page:&nbsp;&nbsp;';
+        
+        for($index=1; $index<=$total_pages; $index++)
+        {
+            if($index==$page_num) {
+                $recent_updates .= '&nbsp;' . $index . '&nbsp;';
+            } else { 
+                $recent_updates .= html_writer::start_tag('a', array('href'=>'#','onClick'=>'document.frmfilter.page.value='.$index.';document.frmfilter.submit();'));
+                $recent_updates .= '&nbsp;' . $index . '&nbsp;';
+                $recent_updates .= html_writer::end_tag('a');
+            }
+        }
+        $recent_updates .= html_writer::end_tag('div');
+    }
     
     return $recent_updates;
 }
@@ -202,20 +266,95 @@ function get_recent_updates($course_id, $update_type) {
   *
   * Author: Daniel J. Somers 15/10/2012
   */
-function get_recent_update_records($course_id, $update_type) {
+function get_recent_update_records($course_id, $update_type, $page_num, $limit) {
 
     global $CFG, $USER, $DB;
-
+    
     // get configuration settings
     $notifcations_per_page = $CFG->notifications_per_page;
     $max_number_of_notifications = $CFG->max_number_of_notifications;
     $notifications_time_period = $CFG->notifications_time_period;        
     
     $recent_updates = array();
-    $current_update_type='';
     
-    // update type required is all, announcement, or course content
-    if($update_type==0 || $update_type==1 || $update_type==2) {
+    //$limit_sql = 'LIMIT '.$limit . ','. $page_num*$notifcations_per_page;
+    
+    //echo $limit_sql;
+    
+    // update type required is all, or latest news (announcements)
+    if($update_type==0 || $update_type==1) {
+        
+        // get users enrolled courses
+        $courses = enrol_get_my_courses(NULL, 'visible DESC');
+        
+        foreach($courses as $course)
+        {
+            
+            require_once($CFG->dirroot.'/mod/forum/lib.php');
+            
+            // get news for each course
+            if ($announcements = forum_get_course_forum($course->id, 'news')) {
+                
+                $current_course = $DB->get_record('course', array('id'=>$course->id));
+                $modinfo = get_fast_modinfo($current_course);
+                
+                if ($modinfo->instances['forum'][$announcements->id]) {
+
+                    $cm = $modinfo->instances['forum'][$announcements->id];
+
+                    if ($cm->uservisible) {
+                        $context = get_context_instance(CONTEXT_MODULE, $cm->id);
+
+                        if (has_capability('mod/forum:viewdiscussion', $context)) {
+                            
+                            $log_entry_viewed = 'unread';
+                            $log_entry_url = $CFG->wwwroot.'/mod/forum/view.php?id='.$announcements->id;
+                    
+                            // check if the user has viewed the update
+                            if($DB->get_record_select('log', "userid = ? AND module = 'forum' AND course = ? AND cmid = ? AND (action = 'view forum') LIMIT 1", array($USER->id, $course->id, $announcements->id))) {
+                                // mark this log entry as viewed
+                                $log_entry_viewed = 'read';
+                            }
+              
+                            // get course name
+                            $log_entry_course_name = html_writer::start_tag('a', array('href'=>$log_entry_url));
+                            $log_entry_course_name .= $course->fullname;
+                            $log_entry_course_name .= html_writer::end_tag('a');
+                                                                            
+                            // prepare update text
+                            $log_entry_update_text = html_writer::start_tag('a', array('href'=>$log_entry_url));
+                            $log_entry_update_text .= $announcements->intro.': ';
+                            $log_entry_update_text .= format_string($cm->name, true);
+                            $log_entry_update_text .= html_writer::end_tag('a');
+                        
+                            // get time of update
+                            $log_entry_time_created = date('l jS F Y', $announcements->timemodified);
+                            $log_datetime_compare = $announcements->timemodified;
+                            
+                            // store log entries
+                            $recent_update = new stdClass();
+                            $recent_update->id = $announcements->id;
+                            $recent_update->course = $log_entry_course_name;
+                            $recent_update->update_text = $log_entry_update_text;
+                            $recent_update->date_time = $log_entry_time_created;
+                            $recent_update->status = $log_entry_viewed;
+                            
+                            // check what the this update type is
+                            $recent_update->update_type = 1;
+        
+                            $recent_update->order_by = $log_datetime_compare;
+                            
+                            // add this update to the recent updates array
+                            $recent_updates[]=$recent_update;                    
+                        }        
+                    }
+                }
+            }
+        }
+    }
+        
+    // update type required is all, or course content
+    if($update_type==0 || $update_type==2) {
     
         // get added course modules
         if($course_id!=0)
@@ -238,33 +377,6 @@ function get_recent_update_records($course_id, $update_type) {
                 if (count($info) != 2) {
                     debugging("Incorrect log entry info: id = ".$log->id, DEBUG_DEVELOPER);
                     continue;
-                }
-                
-                // show all ?
-                if($update_type==0 && stripos($log->url,'forum')===false) {
-                    $current_update_type=2;
-                } else {
-                    $current_update_type=1;
-                }
-                
-                // exclude announcements ?
-                if($update_type==2) {
-                    if(stripos($log->url,'forum')===false) {
-                        // this update type is course content
-                        $current_update_type=2;
-                    } else {
-                        continue;
-                    }
-                }
-                
-                // exclude course content ?
-                if($update_type==1) {
-                    if(stripos($log->url,'forum')!==false) {
-                        // this update type is an announcement
-                        $current_update_type=1;
-                    } else {
-                        continue;
-                    }                   
                 }
                 
                 // get course details for log entry
@@ -332,7 +444,7 @@ function get_recent_update_records($course_id, $update_type) {
                     $recent_update->status = $log_entry_viewed;
                     
                     // check what the this update type is
-                    $recent_update->update_type = $current_update_type;
+                    $recent_update->update_type = 2;
 
                     $recent_update->order_by = $log_datetime_compare;
                     
@@ -408,7 +520,7 @@ function get_recent_update_records($course_id, $update_type) {
     // is maximum number of notifications limited ?
     if($max_number_of_notifications>0)
     {
-        $recent_updates = array_slice($recent_updates, 0, $max_number_of_notifications);
+        $recent_updates = array_slice($recent_updates, $page_num*$limit, $limit);
     }
     
     return $recent_updates;

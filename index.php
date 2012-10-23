@@ -19,9 +19,14 @@ require_once($CFG->dirroot.'/local/yourrecentupdates/lib.php');
 
 require_login(0, false);
 
-$course_id = optional_param('course', 0, PARAM_INT);  // show recent updates based on course
-$update_type = optional_param('filter', 0, PARAM_INT);         // show all updates|announcements|course content|discussions
+global $CFG;
 
+$course_id = optional_param('course', 0, PARAM_INT);    // show recent updates based on course
+$update_type = optional_param('filter', 0, PARAM_INT);  // show all updates|announcements|course content|discussions
+$page_num = optional_param('page', 0, PARAM_INT);     // current page number (list of updates)
+
+// get configuration settings
+$notifcations_per_page = $CFG->notifications_per_page;
 
 $PAGE->set_url('/local/yourrecentupdates/');
 $context = get_context_instance(CONTEXT_SYSTEM);
@@ -51,18 +56,13 @@ if($hassiteconfig) {
     $recent_updates .= html_writer::end_tag('div');
 }
 
-
 $recent_updates .= get_user_notification_filters($course_id);
 
-
-
-$testing = get_recent_updates($course_id, $update_type);
+$testing = get_recent_updates($course_id, $update_type, $page_num, $notifcations_per_page);
 
 $recent_updates .= html_writer::start_tag('h4');
 $recent_updates .= $testing;
 $recent_updates .= html_writer::end_tag('h4');
-
-
 
 
 $recent_updates .= $OUTPUT->footer();

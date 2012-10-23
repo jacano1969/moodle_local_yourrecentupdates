@@ -28,7 +28,4 @@ if ($hassiteconfig) { // only users with this ability can access these settings
     
     $settings->add(new admin_setting_configtext('max_number_of_notifications', get_string('max_number_of_notifications', 'local_yourrecentupdates'),
                                                 get_string('max_number_of_notifications_detail', 'local_yourrecentupdates'), 0, PARAM_INT));
-    
-    $settings->add(new admin_setting_configtext('notifications_time_period', get_string('notifications_time_period', 'local_yourrecentupdates'),
-                                                get_string('notifications_time_period_detail', 'local_yourrecentupdates'), 0, PARAM_INT));
 }
