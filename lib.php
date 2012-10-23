@@ -16,11 +16,6 @@
 
 
 /**
- * lib functions for your recent updates local plugin
- */
-
-
-/**
  * Description: function to show filters for recent updates
  *
  * Author: Daniel J. Somers 15/10/2012
@@ -173,10 +168,6 @@ function get_recent_updates($course_id, $update_type, $page_num, $limit) {
     // show notifications
     foreach($updates as $update) {
         
-        /*if($total_updates<=$limit) {
-        
-        }*/
-        
         if($update_count >= $current_update && $update_count < $current_update+$limit)
         {
             // show whether this update is read/unread
@@ -256,16 +247,16 @@ function get_recent_updates($course_id, $update_type, $page_num, $limit) {
 }
 
 
-
 /**
  * Helper functions
  */
 
- /**
-  * Description: function to retreive notifications given the notification type
-  *
-  * Author: Daniel J. Somers 15/10/2012
-  */
+ 
+/**
+ * Description: function to retreive notifications given the notification type
+ *
+ * Author: Daniel J. Somers 15/10/2012
+ */
 function get_recent_update_records($course_id, $update_type, $page_num, $limit) {
 
     global $CFG, $USER, $DB;
@@ -276,10 +267,6 @@ function get_recent_update_records($course_id, $update_type, $page_num, $limit) 
     $notifications_time_period = $CFG->notifications_time_period;        
     
     $recent_updates = array();
-    
-    //$limit_sql = 'LIMIT '.$limit . ','. $page_num*$notifcations_per_page;
-    
-    //echo $limit_sql;
     
     // update type required is all, or latest news (announcements)
     if($update_type==0 || $update_type==1) {
@@ -542,27 +529,3 @@ function sort_recent_updates_by_date($recent_update_1, $recent_update_2)
     return 0; 
 }
 
-
-
-
-/*  still to implement
-<div class="pagination">
-  
-  <p>Page 2 of 14</p>
-
-  <ul>
-    <li><a href="">1</a></li>
-    <li><a href="">2</a></li>
-    <li><a href="">3</a></li>
-    <li><a href="">4</a></li>
-    <li><a href="">&hellip;</a></li>
-    <li><a href="">14</a></li>
-    <li class="next"><a href="">Next<span></span></a></li>
-    <li class="last"><a href="">Last<span></span></a></li>                
-  </ul>
-  
-  <div class="clearfix"></div>  
-              
-</div><!-- /.pagination -->
-
-*/
