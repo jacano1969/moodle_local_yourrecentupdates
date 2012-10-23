@@ -20,8 +20,8 @@ $string['notifications_per_page'] ='Notifications per page';
 $string['notifications_per_page_detail'] ='Number of Notifications to show per page (default = 20)';
 $string['max_number_of_notifications'] ='Notifications limit';
 $string['max_number_of_notifications_detail'] ='Limit the number of Notifications retreived (0 = no limit)';
-$string['notifications_time_period'] ='Notification time period';
-$string['notifications_time_period_detail'] ='Time period (in seconds) of Notifications to retreive (0 = show all)';
+
+
 
 
 

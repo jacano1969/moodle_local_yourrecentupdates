@@ -264,7 +264,6 @@ function get_recent_update_records($course_id, $update_type, $page_num, $limit) 
     // get configuration settings
     $notifcations_per_page = $CFG->notifications_per_page;
     $max_number_of_notifications = $CFG->max_number_of_notifications;
-    $notifications_time_period = $CFG->notifications_time_period;        
     
     $recent_updates = array();
     
