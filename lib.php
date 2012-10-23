@@ -262,7 +262,6 @@ function get_recent_update_records($course_id, $update_type, $page_num, $limit) 
     global $CFG, $USER, $DB;
     
     // get configuration settings
-    $notifcations_per_page = $CFG->notifications_per_page;
     $max_number_of_notifications = $CFG->max_number_of_notifications;
     
     $recent_updates = array();
@@ -506,7 +505,7 @@ function get_recent_update_records($course_id, $update_type, $page_num, $limit) 
     // is maximum number of notifications limited ?
     if($max_number_of_notifications>0)
     {
-        $recent_updates = array_slice($recent_updates, $page_num*$limit, $limit);
+        $recent_updates = array_slice($recent_updates, 0, $max_number_of_notifications);
     }
     
     return $recent_updates;
