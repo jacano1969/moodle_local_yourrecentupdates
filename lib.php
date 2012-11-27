@@ -313,7 +313,8 @@ function get_recent_update_records($course_id, $update_type, $page_num, $limit) 
                             $log_entry_update_text .= html_writer::end_tag('a');
                         
                             // get time of update
-                            $log_entry_time_created = date('l jS F Y', $announcements->timemodified);
+                            //$log_entry_time_created = date('l jS F Y', $announcements->timemodified);
+                            $log_entry_time_created = date('l j/m/y', $announcements->timemodified);
                             $log_datetime_compare = $announcements->timemodified;
                             
                             // store log entries
@@ -417,7 +418,8 @@ function get_recent_update_records($course_id, $update_type, $page_num, $limit) 
                     $log_entry_update_text .= html_writer::end_tag('a');
                 
                     // get time of update
-                    $log_entry_time_created = date('l jS F Y', $log->time);
+                    $log_entry_time_created = date('l j/m/y', $log->time);
+                    //$log_entry_time_created = date('l jS F Y', $log->time);
                     $log_datetime_compare = $log->time;
                     
                     // store log entries
@@ -483,7 +485,8 @@ function get_recent_update_records($course_id, $update_type, $page_num, $limit) 
                 $log_entry_update_text .= html_writer::end_tag('a');
                 
                 // get time of update
-                $log_entry_time_created = date('l jS F Y', $log->time);
+                $log_entry_time_created = date('l j/m/y', $log->time);
+                //$log_entry_time_created = date('l jS F Y', $log->time);
                 $log_datetime_compare = $log->time;
                 
                 // store log entries
