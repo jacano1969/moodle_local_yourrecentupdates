@@ -171,7 +171,7 @@ function get_recent_updates($course_id, $update_type, $page_num, $limit) {
     }
     
     // show notifications
-    foreach($updates as $update) {
+    foreach($updates as $update) { 
         
         if($update_count >= $current_update && $update_count < $current_update+$limit)
         {
