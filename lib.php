@@ -123,6 +123,7 @@ function get_user_notification_filters($course_selected)
  */
 function get_recent_updates($course_id, $update_type, $page_num, $limit) {
   
+    $recent_updates = '';
     //$recent_updates = html_writer::start_tag('h3');
     //$recent_updates .= get_string('allupdates', 'local_yourrecentupdates');
     //$recent_updates .= html_writer::end_tag('h3');
