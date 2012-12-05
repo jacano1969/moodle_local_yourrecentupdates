@@ -40,6 +40,8 @@ function get_user_notification_filters($course_selected)
     
     $course_select .= html_writer::start_tag('li');
     $course_select .= html_writer::start_tag('a', array('href'=>'#','onClick'=>'document.frmfilter.filter.value=1;document.frmfilter.submit();'));
+    $course_select .= html_writer::start_tag('span');
+    $course_select .= html_writer::end_tag('span');
     $course_select .= html_writer::empty_tag('img', array('src'=>'pix/icon_announcements.png'));
     $course_select .= get_string('announcements', 'local_yourrecentupdates');
     $course_select .= html_writer::end_tag('a');
@@ -47,6 +49,8 @@ function get_user_notification_filters($course_selected)
     
     $course_select .= html_writer::start_tag('li');
     $course_select .= html_writer::start_tag('a', array('href'=>'#','onClick'=>'document.frmfilter.filter.value=2;document.frmfilter.submit();'));
+    $course_select .= html_writer::start_tag('span');
+    $course_select .= html_writer::end_tag('span');
     $course_select .= html_writer::empty_tag('img', array('src'=>'pix/icon_coursecontent.png'));
     $course_select .= get_string('coursecontent', 'local_yourrecentupdates');
     $course_select .= html_writer::end_tag('a');
@@ -54,6 +58,8 @@ function get_user_notification_filters($course_selected)
     
     $course_select .= html_writer::start_tag('li');
     $course_select .= html_writer::start_tag('a', array('href'=>'#','onClick'=>'document.frmfilter.filter.value=3;document.frmfilter.submit();'));
+    $course_select .= html_writer::start_tag('span');
+    $course_select .= html_writer::end_tag('span');
     $course_select .= html_writer::empty_tag('img', array('src'=>'pix/icon_discussions.png'));
     $course_select .= get_string('discussions', 'local_yourrecentupdates');
     $course_select .= html_writer::end_tag('a');
