@@ -3,7 +3,7 @@
 $string['pluginname'] = 'Your Recent Updates';
 $string['updatesfromcourse'] = 'Show updates from';
 $string['updatetype'] = 'Show by update type';
-$string['all'] = 'All';
+$string['all'] = 'All Updates';
 $string['filter'] = 'Filter';
 $string['allcourses'] = 'All Courses';
 $string['announcements'] = 'Announcements';
