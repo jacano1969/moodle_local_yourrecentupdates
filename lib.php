@@ -199,15 +199,17 @@ function get_recent_updates($course_id, $update_type, $page_num, $limit) {
                 //$recent_updates .= html_writer::end_tag('td');
             }
             
-            // update text
-            //$recent_updates .= html_writer::start_tag('td');
-            $recent_updates .= $update->update_text . '<br>';
-            //$recent_updates .= html_writer::end_tag('td');
-        
             // for course
             //$recent_updates .= html_writer::start_tag('td', array('class'=>'course'));
-            $recent_updates .= $update->course;
+            $recent_updates .= $update->course. '<br>';
             //$recent_updates .= html_writer::end_tag('td');
+            
+            // update text
+            //$recent_updates .= html_writer::start_tag('td');
+            $recent_updates .= $update->update_text; 
+            //$recent_updates .= html_writer::end_tag('td');
+        
+            
             
             $recent_updates .= html_writer::end_tag('td');
             
@@ -309,12 +311,12 @@ function get_recent_update_records($course_id, $update_type, $page_num, $limit) 
                             }
               
                             // get course name
-                            $log_entry_course_name = html_writer::start_tag('a', array('href'=>$log_entry_url));
+                            $log_entry_course_name = html_writer::start_tag('a', array('class'=>'updates-course', 'href'=>$log_entry_url));
                             $log_entry_course_name .= $course->fullname;
                             $log_entry_course_name .= html_writer::end_tag('a');
                                                                             
                             // prepare update text
-                            $log_entry_update_text = html_writer::start_tag('a', array('href'=>$log_entry_url));
+                            $log_entry_update_text = html_writer::start_tag('a', array('class'=>'updates-text','href'=>$log_entry_url));
                             $log_entry_update_text .= $announcements->intro.': ';
                             $log_entry_update_text .= format_string($cm->name, true);
                             $log_entry_update_text .= html_writer::end_tag('a');
