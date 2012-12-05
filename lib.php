@@ -69,11 +69,9 @@ function get_user_notification_filters($course_selected)
     
     $course_select .= html_writer::start_tag('div', array('class'=>'row'));
     
-    $course_select .= html_writer::start_tag('h3',array('for'=>'course'));
-    $course_select .= get_string('updatesfromcourse', 'local_yourrecentupdates');
-    $course_select .= html_writer::end_tag('h3');
-   
-    $course_select .= html_writer::start_tag('p');   
+    $course_select .= html_writer::start_tag('b');
+    $course_select .= get_string('updatesfromcourse', 'local_yourrecentupdates') . ' ';
+    $course_select .= html_writer::end_tag('b');
    
     $course_select .= html_writer::start_tag('select',array('name'=>'course'));
    
@@ -103,7 +101,6 @@ function get_user_notification_filters($course_selected)
     $course_select .= html_writer::empty_tag('input', array('type'=>'hidden','name'=>'page'));
     $course_select .= html_writer::empty_tag('input', array('type'=>'hidden','name'=>'filter'));
     
-    $course_select .= html_writer::end_tag('p');  
     $course_select .= html_writer::end_tag('div');
     
     $course_select .= html_writer::end_tag('form');
