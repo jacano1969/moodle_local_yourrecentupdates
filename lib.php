@@ -201,12 +201,12 @@ function get_recent_updates($course_id, $update_type, $page_num, $limit) {
             
             // for course
             //$recent_updates .= html_writer::start_tag('td', array('class'=>'course'));
-            $recent_updates .= $update->course. '<br>';
+            $recent_updates .= ' '.$update->course. '<br>';
             //$recent_updates .= html_writer::end_tag('td');
             
             // update text
             //$recent_updates .= html_writer::start_tag('td');
-            $recent_updates .= $update->update_text; 
+            $recent_updates .= ' '.$update->update_text; 
             //$recent_updates .= html_writer::end_tag('td');
         
             
