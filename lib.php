@@ -102,7 +102,7 @@ function get_user_notification_filters($course_selected)
         }
     }
    
-    $course_select .= html_writer::end_tag('select');
+    $course_select .= html_writer::end_tag('select') .' ';
    
     $course_select .= html_writer::empty_tag('input',array('type'=>'submit','value'=>get_string('filter', 'local_yourrecentupdates')));
     
