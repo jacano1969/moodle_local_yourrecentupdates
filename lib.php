@@ -482,12 +482,12 @@ function get_recent_update_records($course_id, $update_type, $page_num, $limit) 
   
                 // get course name
                 $log_entry_course = $DB->get_record('course',array('id'=>$log->course));
-                $log_entry_course_name = html_writer::start_tag('a', array('href'=>$CFG->wwwroot.'/mod/forum/'.$log_entry_url));
+                $log_entry_course_name = html_writer::start_tag('a', array('class'=>'updates-course', 'href'=>$CFG->wwwroot.'/mod/forum/'.$log_entry_url));
                 $log_entry_course_name .= $log_entry_course->fullname;
                 $log_entry_course_name .= html_writer::end_tag('a');
                                                                 
                 // prepare update text
-                $log_entry_update_text = html_writer::start_tag('a', array('href'=>$CFG->wwwroot.'/mod/forum/'.$log_entry_url));
+                $log_entry_update_text = html_writer::start_tag('a', array('class'=>'updates-text',href'=>$CFG->wwwroot.'/mod/forum/'.$log_entry_url));
                 $log_entry_update_text .= $log_entry_user->firstname . ' ' .$log_entry_user->lastname.': ';
                 $stradded = get_string('added', 'moodle', get_string('modulename', 'forum'));
                 $log_entry_update_text .= $stradded . ' ' . $log_entry_name;
