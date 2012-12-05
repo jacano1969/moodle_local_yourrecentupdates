@@ -34,6 +34,8 @@ function get_user_notification_filters($course_selected)
     
     $course_select .= html_writer::start_tag('li', array('class'=>'all selected'));
     $course_select .= html_writer::start_tag('a', array('href'=>'#','onClick'=>'document.frmfilter.filter.value=0;document.frmfilter.submit();'));
+    $course_select .= html_writer::start_tag('span');
+    $course_select .= html_writer::end_tag('span');
     $course_select .= get_string('all', 'local_yourrecentupdates');
     $course_select .= html_writer::end_tag('a');
     $course_select .= html_writer::end_tag('li');
