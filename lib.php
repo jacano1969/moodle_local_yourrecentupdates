@@ -23,7 +23,7 @@
 function get_user_notification_filters($course_selected)
 {       
     $course_select = html_writer::start_tag('form',array('name'=>'frmfilter','method'=>'post'));
-    $course_select .= html_writer::start_tag('div', array('class'=>'filters'));
+    //$course_select .= html_writer::start_tag('div', array('class'=>'filters'));
     
     $course_select .= html_writer::start_tag('div', array('class'=>'tabtree'));
     //$course_select .= html_writer::start_tag('h3');
@@ -71,7 +71,7 @@ function get_user_notification_filters($course_selected)
     $course_select .= html_writer::start_tag('div', array('class'=>'clearfix'));
     $course_select .= html_writer::end_tag('div');
     
-    $course_select .= html_writer::end_tag('div');
+    //$course_select .= html_writer::end_tag('div');
     
     $course_select .= html_writer::start_tag('div', array('class'=>'row'));
     
