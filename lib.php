@@ -209,8 +209,10 @@ function get_recent_updates($course_id, $update_type, $page_num, $limit) {
             $recent_updates .= $update->course;
             //$recent_updates .= html_writer::end_tag('td');
             
+            $recent_updates .= html_writer::end_tag('td');
+            
             // time/date
-            //$recent_updates .= html_writer::start_tag('td', array('class'=>'time'));
+            $recent_updates .= html_writer::start_tag('td', array('class'=>'time'));
             $recent_updates .= $update->date_time;
             $recent_updates .= html_writer::end_tag('td');        
     
