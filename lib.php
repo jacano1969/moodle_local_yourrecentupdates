@@ -182,35 +182,35 @@ function get_recent_updates($course_id, $update_type, $page_num, $limit) {
             if($update->update_type==2) {
                 $recent_updates .= html_writer::start_tag('td', array('class'=>'resource'));
                 $recent_updates .= html_writer::empty_tag('img', array('src'=>'pix/icon_coursecontent.png','alt'=>''));
-                $recent_updates .= html_writer::end_tag('td');
+                //$recent_updates .= html_writer::end_tag('td');
             }
             
             // if announcement
             if($update->update_type==1) {
                 $recent_updates .= html_writer::start_tag('td', array('class'=>'announcement'));
                 $recent_updates .= html_writer::empty_tag('img', array('src'=>'pix/icon_announcements.png','alt'=>''));
-                $recent_updates .= html_writer::end_tag('td');
+                //$recent_updates .= html_writer::end_tag('td');
             }
             
             // if discussion
             if($update->update_type==3) {
                 $recent_updates .= html_writer::start_tag('td', array('class'=>'comment'));
                 $recent_updates .= html_writer::empty_tag('img', array('src'=>'pix/icon_discussions.png','alt'=>''));
-                $recent_updates .= html_writer::end_tag('td');
+                //$recent_updates .= html_writer::end_tag('td');
             }
             
             // update text
-            $recent_updates .= html_writer::start_tag('td');
+            //$recent_updates .= html_writer::start_tag('td');
             $recent_updates .= $update->update_text;
-            $recent_updates .= html_writer::end_tag('td');
+            //$recent_updates .= html_writer::end_tag('td');
         
             // for course
-            $recent_updates .= html_writer::start_tag('td', array('class'=>'course'));
+            //$recent_updates .= html_writer::start_tag('td', array('class'=>'course'));
             $recent_updates .= $update->course;
-            $recent_updates .= html_writer::end_tag('td');
+            //$recent_updates .= html_writer::end_tag('td');
             
             // time/date
-            $recent_updates .= html_writer::start_tag('td', array('class'=>'time'));
+            //$recent_updates .= html_writer::start_tag('td', array('class'=>'time'));
             $recent_updates .= $update->date_time;
             $recent_updates .= html_writer::end_tag('td');        
     
