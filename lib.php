@@ -316,9 +316,9 @@ function get_recent_update_records($course_id, $update_type, $page_num, $limit) 
                             $log_entry_course_name .= html_writer::end_tag('a');
                                                                             
                             // prepare update text
-                            $log_entry_update_text = html_writer::start_tag('a', array('class'=>'updates-text','href'=>$log_entry_url));
-                            $log_entry_update_text .= $announcements->intro.': ';
+                            $log_entry_update_text = html_writer::start_tag('a', array('class'=>'updates-text', 'href'=>$log_entry_url));
                             $log_entry_update_text .= format_string($cm->name, true);
+                            $log_entry_update_text .= ' - ' .$announcements->intro;                            
                             $log_entry_update_text .= html_writer::end_tag('a');
                         
                             // get time of update
