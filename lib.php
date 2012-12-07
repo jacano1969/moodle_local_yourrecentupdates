@@ -182,23 +182,29 @@ function get_recent_updates($course_id, $update_type, $page_num, $limit) {
             
             // if course update
             if($update->update_type==2) {
-                $recent_updates .= html_writer::start_tag('td', array('class'=>'resource'));
+                $recent_updates .= html_writer::start_tag('td', array('class'=>'image'));
                 $recent_updates .= html_writer::empty_tag('img', array('src'=>'pix/icon_coursecontent.png','alt'=>''));
+                $recent_updates .= html_writer::end_tag('td');
+                $recent_updates .= html_writer::start_tag('td', array('class'=>'resource'));
                 //$recent_updates .= html_writer::end_tag('td');
             }
             
             // if announcement
             if($update->update_type==1) {
-                $recent_updates .= html_writer::start_tag('td', array('class'=>'announcement'));
+                $recent_updates .= html_writer::start_tag('td', array('class'=>'image'));
                 $recent_updates .= html_writer::empty_tag('img', array('src'=>'pix/icon_announcements.png','alt'=>''));
+                $recent_updates .= html_writer::end_tag('td');
                 //$recent_updates .= html_writer::end_tag('td');
+                $recent_updates .= html_writer::start_tag('td', array('class'=>'announcement'));
             }
             
             // if discussion
             if($update->update_type==3) {
-                $recent_updates .= html_writer::start_tag('td', array('class'=>'comment'));
+                $recent_updates .= html_writer::start_tag('td', array('class'=>'image'));
                 $recent_updates .= html_writer::empty_tag('img', array('src'=>'pix/icon_discussions.png','alt'=>''));
+                $recent_updates .= html_writer::end_tag('td');
                 //$recent_updates .= html_writer::end_tag('td');
+                $recent_updates .= html_writer::start_tag('td', array('class'=>'comment'));
             }
             
             // for course
