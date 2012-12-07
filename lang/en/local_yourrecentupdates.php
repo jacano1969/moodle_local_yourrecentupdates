@@ -1,6 +1,7 @@
 <?php
 
-$string['pluginname'] = 'Recent updates';
+$string['pluginname'] = 'Your Recent Updates';
+$string['recentupdates']= 'Recent updates';
 $string['updatesfromcourse'] = 'Show updates from';
 $string['updatetype'] = 'Show by update type';
 $string['all'] = 'All Updates';

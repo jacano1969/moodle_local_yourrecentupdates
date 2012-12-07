@@ -31,14 +31,14 @@ $notifcations_per_page = $CFG->notifications_per_page;
 $PAGE->set_url('/local/yourrecentupdates/');
 $context = get_context_instance(CONTEXT_SYSTEM);
 $PAGE->set_context($context);
-$PAGE->set_title(get_string('pluginname', 'local_yourrecentupdates'));
+$PAGE->set_title(get_string('recentupdates', 'local_yourrecentupdates'));
 
-$PAGE->navbar->add(get_string('pluginname', 'local_yourrecentupdates'));
+$PAGE->navbar->add(get_string('recentupdates', 'local_yourrecentupdates'));
 
 $recent_updates='';
 
 $recent_updates .= $OUTPUT->header();
-$recent_updates .= $OUTPUT->heading(get_string('pluginname', 'local_yourrecentupdates'));
+$recent_updates .= $OUTPUT->heading(get_string('recentupdates', 'local_yourrecentupdates'));
 
 $hassiteconfig = has_capability('moodle/site:config', $context);
 
