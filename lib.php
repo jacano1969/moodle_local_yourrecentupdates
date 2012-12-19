@@ -20,7 +20,7 @@
  *
  * Author: Daniel J. Somers 15/10/2012
  */
-function get_user_notification_filters($course_selected)
+function get_user_notification_filters($course_selected, $update_type)
 {       
     $course_select = html_writer::start_tag('form',array('name'=>'frmfilter','method'=>'post'));
     //$course_select .= html_writer::start_tag('div', array('class'=>'filters'));
@@ -32,7 +32,11 @@ function get_user_notification_filters($course_selected)
     
     $course_select .= html_writer::start_tag('ul', array('class'=>'tabrow0'));
     
-    $course_select .= html_writer::start_tag('li', array('class'=>'all selected'));
+    if($update_type=='0') {
+        $course_select .= html_writer::start_tag('li', array('class'=>'all selected'));
+    } else {
+        $course_select .= html_writer::start_tag('li', array('class'=>'all'));
+    }
     $course_select .= html_writer::start_tag('a', array('href'=>'#','onClick'=>'document.frmfilter.filter.value=0;document.frmfilter.submit();'));
     $course_select .= html_writer::start_tag('span');
     $course_select .= html_writer::end_tag('span');
@@ -40,7 +44,11 @@ function get_user_notification_filters($course_selected)
     $course_select .= html_writer::end_tag('a');
     $course_select .= html_writer::end_tag('li');
     
-    $course_select .= html_writer::start_tag('li', array('class'=>'announcements'));
+    if($update_type=='1') {
+        $course_select .= html_writer::start_tag('li', array('class'=>'announcements selected'));
+    } else {
+        $course_select .= html_writer::start_tag('li', array('class'=>'announcements'));
+    }
     $course_select .= html_writer::start_tag('a', array('href'=>'#','onClick'=>'document.frmfilter.filter.value=1;document.frmfilter.submit();'));
     $course_select .= html_writer::start_tag('span');
     $course_select .= html_writer::end_tag('span');
@@ -49,7 +57,11 @@ function get_user_notification_filters($course_selected)
     $course_select .= html_writer::end_tag('a');
     $course_select .= html_writer::end_tag('li');
     
-    $course_select .= html_writer::start_tag('li', array('class'=>'course-content'));
+    if($update_type=='2') {
+        $course_select .= html_writer::start_tag('li', array('class'=>'course-content selected'));
+    } else {
+        $course_select .= html_writer::start_tag('li', array('class'=>'course-content'));
+    }
     $course_select .= html_writer::start_tag('a', array('href'=>'#','onClick'=>'document.frmfilter.filter.value=2;document.frmfilter.submit();'));
     $course_select .= html_writer::start_tag('span');
     $course_select .= html_writer::end_tag('span');
@@ -58,7 +70,11 @@ function get_user_notification_filters($course_selected)
     $course_select .= html_writer::end_tag('a');
     $course_select .= html_writer::end_tag('li');    
     
-    $course_select .= html_writer::start_tag('li', array('class'=>'discussions'));
+    if($update_type=='2') {
+        $course_select .= html_writer::start_tag('li', array('class'=>'discussions selected'));
+    } else {
+        $course_select .= html_writer::start_tag('li', array('class'=>'discussions'));
+    }
     $course_select .= html_writer::start_tag('a', array('href'=>'#','onClick'=>'document.frmfilter.filter.value=3;document.frmfilter.submit();'));
     $course_select .= html_writer::start_tag('span');
     $course_select .= html_writer::end_tag('span');

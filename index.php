@@ -56,7 +56,7 @@ if($hassiteconfig) {
     $recent_updates .= html_writer::end_tag('div');
 }
 
-$recent_updates .= get_user_notification_filters($course_id);
+$recent_updates .= get_user_notification_filters($course_id, $update_type);
 
 $testing = get_recent_updates($course_id, $update_type, $page_num, $notifcations_per_page);
 
