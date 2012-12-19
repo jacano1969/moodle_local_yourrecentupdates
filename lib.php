@@ -70,7 +70,7 @@ function get_user_notification_filters($course_selected, $update_type)
     $course_select .= html_writer::end_tag('a');
     $course_select .= html_writer::end_tag('li');    
     
-    if($update_type=='2') {
+    if($update_type=='3') {
         $course_select .= html_writer::start_tag('li', array('class'=>'discussions selected'));
     } else {
         $course_select .= html_writer::start_tag('li', array('class'=>'discussions'));
