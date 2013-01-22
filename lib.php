@@ -313,7 +313,13 @@ function get_recent_update_records($course_id, $update_type, $page_num, $limit) 
             // get news for each course
             if ($announcements = forum_get_course_forum($course->id, 'news')) {
                 
-                $current_course = $DB->get_record('course', array('id'=>$course->id));
+                // if filtered on a course
+                if($course_id!=0) {
+                    $current_course = $DB->get_record('course', array('id'=>$course_id));
+                } else {
+                    $current_course = $DB->get_record('course', array('id'=>$course->id));
+                }
+                
                 $modinfo = get_fast_modinfo($current_course);
                 
                 if ($modinfo->instances['forum'][$announcements->id]) {
