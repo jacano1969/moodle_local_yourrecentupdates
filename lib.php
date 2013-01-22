@@ -123,7 +123,7 @@ function get_user_notification_filters($course_selected, $update_type)
     $course_select .= html_writer::empty_tag('input',array('type'=>'submit','value'=>get_string('filter', 'local_yourrecentupdates')));
     
     $course_select .= html_writer::empty_tag('input', array('type'=>'hidden','name'=>'page'));
-    $course_select .= html_writer::empty_tag('input', array('type'=>'hidden','name'=>'filter'));
+    $course_select .= html_writer::empty_tag('input', array('type'=>'hidden','name'=>'filter', 'value'=>$update_type));
     
     $course_select .= html_writer::end_tag('div');
     
