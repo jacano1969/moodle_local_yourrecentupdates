@@ -343,7 +343,7 @@ function get_recent_update_records($course_id, $update_type, $page_num, $limit) 
                             $log_entry_url = $CFG->wwwroot.'/mod/forum/view.php?id='.$announcements->id;
                     
                             // check if the user has viewed the update
-                            if($DB->get_record_select('log', "userid = ? AND module = 'forum' AND course = ? AND cmid = ? AND (action = 'view forum') LIMIT 1", array($USER->id, $course->id, $announcements->id))) {
+                            if($DB->get_record_select('log', "userid = ? AND module = 'forum' AND course = ? AND cmid = ? AND (action = 'view forum') LIMIT 1", array($USER->id, $course_forum_id, $announcements->id))) {
                                 // mark this log entry as viewed
                                 $log_entry_viewed = 'read';
                             }
