@@ -310,8 +310,16 @@ function get_recent_update_records($course_id, $update_type, $page_num, $limit) 
             
             require_once($CFG->dirroot.'/mod/forum/lib.php');
             
+            $course_forum_id=0;
+            
+            if($course_id!=0) {
+                $course_forum_id=$course_id;
+            } else {
+                $course_forum_id=$course->id;
+            }
+            
             // get news for each course
-            if ($announcements = forum_get_course_forum($course->id, 'news')) {
+            if ($announcements = forum_get_course_forum($course_forum_id, 'news')) {
                 
                 // if filtered on a course
                 if($course_id!=0) {
