@@ -350,7 +350,7 @@ function get_recent_update_records($course_id, $update_type, $page_num, $limit) 
               
                             // get course name
                             $log_entry_course_name = html_writer::start_tag('a', array('class'=>'updates-course', 'href'=>$log_entry_url));
-                            $log_entry_course_name .= $course->fullname;
+                            $log_entry_course_name .= $current_course->fullname;
                             $log_entry_course_name .= html_writer::end_tag('a');
                                                                             
                             // prepare update text
