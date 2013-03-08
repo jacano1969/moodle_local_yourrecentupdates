@@ -502,7 +502,13 @@ function get_recent_update_records($course_id, $update_type, $page_num, $limit) 
         {
             $logs = $DB->get_records_select('log', "module = 'forum' AND (course = ?) AND (action = 'add discussion' || action = 'add post')", array($course_id), "id DESC");
         } else {
-            $logs = $DB->get_records_select('log', "module = 'forum' AND (action = 'add discussion' || action = 'add post')", null, "id DESC");
+            
+            // get users enrolled courses
+            $courses = enrol_get_my_courses(NULL, 'visible DESC');
+            
+            foreach($courses as $course) {
+                $logs = $DB->get_records_select('log', "module = 'forum' AND course = $course->id AND (action = 'add discussion' || action = 'add post')", null, "id DESC");
+            }
         }
         
         if($logs) {
