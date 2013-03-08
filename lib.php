@@ -399,7 +399,7 @@ function get_recent_update_records($course_id, $update_type, $page_num, $limit) 
             $courses = enrol_get_my_courses(NULL, 'visible DESC');
             
             foreach($courses as $course) {
-                $logs = $DB->get_records_select('log', "module = 'course' AND (action = 'add mod') AND course=$course->id", null, "id DESC");
+                $logs = $DB->get_records_select('log', "module = 'course' AND (action = 'add mod') AND course=?", array($course->id), "id DESC");
             }
         }
         
@@ -507,7 +507,7 @@ function get_recent_update_records($course_id, $update_type, $page_num, $limit) 
             $courses = enrol_get_my_courses(NULL, 'visible DESC');
             
             foreach($courses as $course) {
-                $logs = $DB->get_records_select('log', "module = 'forum' AND course = $course->id AND (action = 'add discussion' || action = 'add post')", null, "id DESC");
+                $logs = $DB->get_records_select('log', "module = 'forum' AND course = ? AND (action = 'add discussion' || action = 'add post')", array($course->id), "id DESC");
             }
         }
         
